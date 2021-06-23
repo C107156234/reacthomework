@@ -19,6 +19,8 @@ const ReportListResults = ({ ...rest }) => {
   const { reports } = useContext(AppContext);
   const [startDate, setStartDate] = useState('2016-01-01');
   const [endDate, setEndDate] = useState('2018-01-01');
+  const [searchEmp, setSearchEmp] = useState('');
+  const [searchCust, setSearchCust] = useState('');
 
   const handleStartDateChange = (event) => {
     setStartDate(event.target.value);
@@ -37,11 +39,21 @@ const ReportListResults = ({ ...rest }) => {
   var start = gDate(startDate)
   var end = gDate(endDate)
 
+  const handleEmpChange = (event) => {
+    setSearchEmp(event.target.value);
+  };
+
+  const handleCustChange = (event) => {
+    setSearchCust(event.target.value);
+  };
+
   const newReports = reports.filter((Report) =>{
     let newdate = gDate(Report.OrderDate)
     return(
       newdate.getTime() >= start.getTime() &&
-      newdate.getTime() <= end.getTime()
+      newdate.getTime() <= end.getTime() &&
+      Report.EmpName.includes(searchEmp) &&
+      Report.CustName.includes(searchCust)
     )
   })
 
@@ -74,6 +86,30 @@ const ReportListResults = ({ ...rest }) => {
                   variant="outlined"
                 />
         </TableCell>
+        <TableCell>
+        <TextField
+                  fullWidth
+                  label="員工查詢"
+                  margin="normal"
+                  name="searchEmp"
+                  onChange={(e) => handleEmpChange(e, "searchEmp")}
+                  type="searchEmp"
+                  value={searchEmp}
+                  variant="outlined"
+                />
+                </TableCell>
+                <TableCell>
+        <TextField
+                  fullWidth
+                  label="客戶查詢"
+                  margin="normal"
+                  name="searchCust"
+                  onChange={(e) => handleCustChange(e, "searchCust")}
+                  type="searchCust"
+                  value={searchCust}
+                  variant="outlined"
+                />
+                </TableCell>
         </TableRow>
           <Table>
             <TableHead>

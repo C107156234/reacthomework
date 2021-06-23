@@ -8,7 +8,8 @@ import {
   Container,
   Link,
   TextField,
-  Typography
+  Typography,
+  unstable_useThemeProps
 } from '@material-ui/core';
 import { useState, useContext } from "react";
 import { AppContext } from "../Context"
@@ -95,12 +96,14 @@ const Login = () => {
                 />
                 <Box sx={{ py: 2 }}>
                   <Button
+                    component={RouterLink}
                     color="primary"
                     disabled={!loginUser.user_id  || !loginUser.user_phone}
                     fullWidth
                     size="large"
                     type="submit"
                     variant="contained"
+                    to="/app/customers"
                   >
                     登入
                   </Button>
