@@ -137,7 +137,7 @@ const SalesorderListResults = ({ ...rest }) => {
                     type="submit"
                     variant="contained"
                   >
-                    新增訂單
+                    新增訂單(未完成)
                   </Button>
                 </Link>
                 </TableCell>

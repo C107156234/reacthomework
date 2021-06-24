@@ -96,14 +96,12 @@ const Login = () => {
                 />
                 <Box sx={{ py: 2 }}>
                   <Button
-                    component={RouterLink}
                     color="primary"
                     disabled={!loginUser.user_id  || !loginUser.user_phone}
                     fullWidth
                     size="large"
                     type="submit"
                     variant="contained"
-                    to="/app/customers"
                   >
                     登入
                   </Button>

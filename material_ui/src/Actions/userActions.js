@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 
 
@@ -258,8 +259,7 @@ export const Actions = () => {
       })
       .then((data) => {
         if (data.id) {
-          setLoginUser(data.id);
-          setUserLength(true);   
+          setLoginUser(data.id); 
 
         } else {
           alert(data.msg);

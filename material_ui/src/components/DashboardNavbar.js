@@ -23,7 +23,7 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
       {...rest}
     >
       <Toolbar>
-        <RouterLink to="/">
+        <RouterLink to="/app/customers">
           <Logo />
         </RouterLink>
         <Box sx={{ flexGrow: 1 }} />
@@ -38,7 +38,9 @@ const DashboardNavbar = ({ onMobileNavOpen, ...rest }) => {
             </Badge>
           </IconButton>
           <IconButton color="inherit">
+          <RouterLink to="/login">
             <InputIcon />
+          </RouterLink>
           </IconButton>
         </Hidden>
         <Hidden lgUp>
