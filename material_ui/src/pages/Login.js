@@ -91,7 +91,7 @@ const Login = () => {
                   name="user_phone"
                   onBlur={handleBlur}
                   onChange={(e) => addLoginUser(e, "user_phone")}
-                  type="user_phone"
+                  type="password"
                   variant="outlined"
                 />
                 <Box sx={{ py: 2 }}>
