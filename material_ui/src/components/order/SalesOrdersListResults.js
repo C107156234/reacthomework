@@ -37,11 +37,17 @@ const SalesorderListResults = ({ ...rest }) => {
           updateSalesorder,
           OrderdetaileditMode,
           OrderdetailcancelEdit,
-          updateOrderdetail, } = useContext(AppContext);
+          updateOrderdetail,
+          insertSalesorder,
+          insertOrderdetail,
+          deleteOrderdetailseq } = useContext(AppContext);
   const [searchEmp, setSearchEmp] = useState('');
   const [searchCust, setSearchCust] = useState('');
+  const [searchOrder, setSearchOrder] = useState('');
   const [newData, setNewData] = useState({});
   const [detailnewData, setDetailnewData] = useState({});
+  const [newSalesorder, setNewSalesorder] = useState({});
+  const [newOrderdetail, setNewOrderdetail] = useState({});
 
   const handleEmpChange = (event) => {
     setSearchEmp(event.target.value);
@@ -51,10 +57,20 @@ const SalesorderListResults = ({ ...rest }) => {
     setSearchCust(event.target.value);
   };
 
+  const handleOrderChange = (event) => {
+    setSearchOrder(event.target.value);
+  };
+
   const deleteConfirm = (id) => {
     if (window.confirm("Are you sure?")) {
       deleteSalesorder(id);
       deleteOrderdetail(id);
+    }
+  };
+
+  const deleteConfirmseq = (id) => {
+    if (window.confirm("Are you sure?")) {
+      deleteOrderdetailseq(id);
     }
   };
 
@@ -90,10 +106,37 @@ const SalesorderListResults = ({ ...rest }) => {
     OrderdetaileditMode(seq);
   };
 
+  const addNewSalesorder = (e, field) => {
+    setNewSalesorder({
+      ...newSalesorder,
+      [field]: e.target.value,
+    });
+  };
+
+  const submitSalesorder = (e) => {
+    e.preventDefault();
+    insertSalesorder(newSalesorder);
+    e.target.reset();
+  };
+
+  const addNewOrderdetail = (e, field) => {
+    setNewOrderdetail({
+      ...newOrderdetail,
+      [field]: e.target.value,
+    });
+  };
+
+  const submitOrderdetail = (e) => {
+    e.preventDefault();
+    insertOrderdetail(newOrderdetail);
+    e.target.reset();
+  };
+
   const newSalesorders = salesorders.filter((Salesorder) =>{
     return(
-      Salesorder.EmpName.includes(searchEmp) &&
-      Salesorder.CustName.includes(searchCust)
+      Salesorder.EmpId.includes(searchEmp) &&
+      Salesorder.CustId.includes(searchCust) &&
+      Salesorder.OrderId.includes(searchOrder)
     )
   })
 
@@ -127,21 +170,71 @@ const SalesorderListResults = ({ ...rest }) => {
                 />
                 </TableCell>
                 <TableCell>
-                <Link
-                 component={RouterLink}
-                 to="/app/insertOrder">
-                <Button
-                    color="primary"
-                    fullWidth
-                    size="large"
-                    type="submit"
-                    variant="contained"
-                  >
-                    新增訂單(未完成)
-                  </Button>
-                </Link>
+        <TextField
+                  fullWidth
+                  label="訂單查詢"
+                  margin="normal"
+                  name="searchOrder"
+                  onChange={(e) => handleOrderChange(e, "searchOrder")}
+                  type="searchOrder"
+                  value={searchOrder}
+                  variant="outlined"
+                />
                 </TableCell>
                 </TableRow>
+                <form className="insertForm" onSubmit={submitSalesorder}>
+                <h2>新增訂單</h2>
+                <label htmlFor="Salesorder_Name">訂單編號</label>
+                <input
+                  type="text"
+                  id="Salesorder_Name"
+                  onChange={(e) => addNewSalesorder(e, "OrderId")}
+                  placeholder="Enter name"
+                  autoComplete="off"
+                  required
+                />
+                <label htmlFor="Salesorder_ID">員工名稱</label>
+                <Select
+                  labelId="EmpId"
+                  id="EmpId"
+                  defaultValue ={0}
+                  onChange={(e) => addNewSalesorder(e, "EmpId")}
+                  >
+                  {users.map((product) =>(
+                  <MenuItem value={product.id}>{product.user_name}</MenuItem>
+                  ))}
+                </Select>
+                <label htmlFor="Product_UnitPrice">客戶名稱</label>
+                <Select
+                  labelId="CustId"
+                  id="CustId"
+                  defaultValue ={0}
+                  onChange={(e) => addNewSalesorder(e, "CustId")}
+                  >
+                  {customers.map((customer) =>(
+                  <MenuItem value={customer.id}>{customer.Cust_name}</MenuItem>
+                  ))}
+                </Select>
+                <label htmlFor="_email">訂單日期</label>
+                <input
+                  type="date"
+                  id="_email"
+                  onChange={(e) => addNewSalesorder(e, "OrderDate")}
+                  placeholder="Enter Cost"
+                  autoComplete="off"
+                  required
+                />
+                <label htmlFor="_email">備註</label>
+                <input
+                  type="text"
+                  id="Salesorder_Name"
+                  onChange={(e) => addNewSalesorder(e, "Descript")}
+                  placeholder="Enter name"
+                  autoComplete="off"
+                  required
+                />
+                <input type="submit" value="新增" />
+              </form>
               {newSalesorders.map(({seq,OrderId,EmpId,CustId,OrderDate,Descript,EmpName,CustName,isEditing}) => (
                 isEditing === true ? (
                   <TableRow
@@ -297,10 +390,10 @@ const SalesorderListResults = ({ ...rest }) => {
                     {OrderId}
                   </TableCell>
                   <TableCell>
-                  {EmpName}
+                  {EmpId}
                   </TableCell>
                   <TableCell>
-                  {CustName}
+                  {CustId}
                   </TableCell>
                   <TableCell>
                     {OrderDate}
@@ -429,7 +522,7 @@ const SalesorderListResults = ({ ...rest }) => {
               ) :(
               <TableRow>
               <TableCell>
-              {ProdName}
+              {ProdId}
               </TableCell>
               <TableCell>
               {Qty}
@@ -447,11 +540,62 @@ const SalesorderListResults = ({ ...rest }) => {
                   >
                     修改
                   </Button>
+                  <Button
+                    color="secondary"
+                    size="large"
+                    className="btn red-btn"
+                    onClick={() => deleteConfirmseq(seq)}
+                    variant="contained"
+                  >
+                    刪除
+                  </Button>
                   </TableCell>    
               </TableRow>
             )))}
             </TableBody>
             </Table>
+            <form className="insertForm" onSubmit={submitOrderdetail}>
+                <label htmlFor="Salesorder_Name">訂單編號</label>
+                <input
+                  type="text"
+                  id="Salesorder_Name"
+                  defaultValue={OrderId}
+                  onChange={(e) => addNewOrderdetail(e, "OrderId")}
+                  placeholder="Enter name"
+                  autoComplete="off"
+                  required
+                />
+                <label htmlFor="Salesorder_ID">產品名稱:</label>
+                <Select
+                  labelId="ProdId"
+                  id="ProdId"
+                  defaultValue ={0}
+                  onChange={(e) => addNewOrderdetail(e, "ProdId")}
+                  >
+                  {products.map((product) =>(
+                  <MenuItem value={product.Product_ID}>{product.Product_Name}</MenuItem>
+                  ))}
+                </Select>
+                <label htmlFor="_email">數量:</label>
+                <input
+                  type="text"
+                  id="Salesorder_Name"
+                  onChange={(e) => addNewOrderdetail(e, "Qty")}
+                  placeholder="Enter name"
+                  autoComplete="off"
+                  required
+                />
+                <label htmlFor="_email">折扣:</label>
+                <input
+                  type="text"
+                  id="Salesorder_Name"
+                  onChange={(e) => addNewOrderdetail(e, "Discount")}
+                  placeholder="Enter name"
+                  autoComplete="off"
+                  required
+                />
+                <input type="submit" value="新增" />
+              </form>
           </AccordionDetails>
                 </Accordion>
               )))}

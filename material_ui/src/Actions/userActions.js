@@ -564,6 +564,95 @@ const updateOrderdetail = (orderdetailData) => {
     });
 };
 
+const insertSalesorder = (newSalesorder) => {
+  fetch("http://localhost/php-react/add-salesorder.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newSalesorder),
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      if (data.id) {
+        setSalesorders([
+          {
+            id: data.id,
+            ...newSalesorder,
+          },
+          ...salesorders,
+        ]);
+        setSalesorderLength(true);
+      } else {
+        alert(data.msg);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const insertOrderdetail = (newOrderdetail) => {
+  fetch("http://localhost/php-react/add-orderdetail.php", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newOrderdetail),
+  })
+    .then((res) => {
+      return res.json();
+    })
+    .then((data) => {
+      if (data.id) {
+        setOrderdetail([
+          {
+            id: data.id,
+            ...newOrderdetail,
+          },
+          ...orderdetails,
+        ]);
+        setOrderdetailLength(true);
+      } else {
+        alert(data.msg);
+      }
+    })
+    .catch((err) => {
+      console.log(err);
+    });
+};
+
+const deleteOrderdetailseq = (theID) => {
+  // filter outing the user.
+let orderdetailDeleted = orderdetails.filter((orderdetail) => {
+  return orderdetail.OrderId !== theID;
+});
+fetch("http://localhost/php-react/delete-orderdetail-seq.php", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({ id: theID }),
+})
+  .then((res) => {
+    return res.json();
+  })
+  .then((data) => {
+    if (data.success) {
+      setOrderdetail(orderdetailDeleted);
+      if (orderdetails.length === 1) {
+        setOrderdetailLength(0);
+      }
+    } else {
+      alert(data.msg);
+    }
+  })
+  .catch((err) => {
+    console.log(err);
+  });
+};
 
   return {
     users,
@@ -598,5 +687,8 @@ const updateOrderdetail = (orderdetailData) => {
     OrderdetaileditMode,
     OrderdetailcancelEdit,
     updateOrderdetail,
+    insertSalesorder,
+    insertOrderdetail,
+    deleteOrderdetailseq,
   };
 };
